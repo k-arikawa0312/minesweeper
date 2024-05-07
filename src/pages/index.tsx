@@ -1,11 +1,32 @@
 import { useState } from 'react';
 import styles from './index.module.css';
 
-// const random = (min: number, max: number) => {
-//   min = Math.cell(min);
-//   max = Math.floor(max);
-//   return Math.floor(Math.random() * (max - min + 1) + min);
-// };
+const directions = [
+  [0, 1],
+  [0, -1],
+  [1, 1],
+  [1, -1],
+  [1, 0],
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+];
+
+const searchBomb = (x: number, y: number, bombMap: number[][]) => {
+  let numberBomb = 0;
+  for (const direction of directions) {
+    const currentPos = [0, 0];
+    const [dy, dx] = direction;
+    currentPos[1] = x + dx;
+    currentPos[0] = y + dy;
+    console.log(currentPos[0], currentPos[1]);
+    if (bombMap[currentPos[0]][currentPos[1]] === 1) {
+      numberBomb += 1;
+      console.log(numberBomb);
+    }
+  }
+  return numberBomb;
+};
 
 const Home = () => {
   const [bombMap, setbombMap] = useState([
@@ -24,22 +45,20 @@ const Home = () => {
 
   const clickHandler = (x: number, y: number) => {
     const newBombMap = structuredClone(bombMap);
-    console.log(x, y);
-    console.log(pushCount);
+
     if (pushCount === 81) {
       let putBomb = 0;
       while (putBomb < 10) {
-        console.log(89);
         const s = Math.floor(Math.random() * 9);
         const t = Math.floor(Math.random() * 9);
-        if (newBombMap[s][t] !== 1) {
+        if ((x !== t || y !== s) && newBombMap[s][t] !== 1) {
           newBombMap[s][t] = 1;
           putBomb += 1;
         }
-        console.log(Math.floor(Math.random() * 9));
       }
       setbombMap(newBombMap);
     }
+    console.log(searchBomb(x, y, newBombMap));
   };
 
   return (
