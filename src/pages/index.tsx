@@ -12,57 +12,49 @@ const directions = [
   [-1, 1],
 ];
 
-const searchBomb = (bombMap: number[][]) => {
-  // console.log('passed');
-  // console.log(bombMap);
+const normalBoard = (normal = 0, row = 9, column = 9): number[][] =>
+  Array.from({ length: row }, () => Array.from({ length: column }, () => normal));
+
+const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
+  const board = normalBoard(-1);
   for (let x = 0; x < 9; x++) {
     for (let y = 0; y < 9; y++) {
-      const numberBomb = [0];
+      // const numberBomb = [0];
+      if (userInputs !== undefined && userInputs[y][x] === 1) {
+        board[y][x] = 0;
+        console.log(y, x);
+      }
       for (const direction of directions) {
-        if (bombMap[y][x] === 1) break;
-        if (
-          bombMap[y + direction[1]] !== undefined &&
-          bombMap[y + direction[1]][x + direction[0]] === 1
-        ) {
-          numberBomb[0] -= 1;
-          bombMap[y][x] = numberBomb[0];
+        if (bombMap !== undefined && bombMap[y][x] === 1) {
+          board[y][x] = 11;
+          break;
         }
+        // if (
+        //   bombMap[y + direction[1]] !== undefined &&
+        //   bombMap[y + direction[1]][x + direction[0]] === 1
+        // ) {
+        //   numberBomb[0] += 1;
+        //   board[y][x] = numberBomb[0];
+        // }
       }
     }
   }
-  // console.log(bombMap);
-  return bombMap;
+
+  return board;
 };
 
 const Home = () => {
-  const [bombMap, setbombMap] = useState([
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  ]);
-  console.log('jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjS');
-  const pushCount = bombMap.flat().filter((cell) => cell === 0).length; //ゲーム開始したか
-  // const bombCount = bombMap.flat().filter((cell) => cell !== 0).length; //爆弾何個あるか
-  // console.log(bombMap);
+  const [bombMap, setbombMap] = useState(normalBoard());
 
-  // console.log('pushCount', pushCount);
-  // console.log(bombMap);
+  const [userInputs, setUserInputs] = useState(normalBoard());
+
+  const pushCount = bombMap.flat().filter((cell) => cell === 0).length; //ゲーム開始したか
+
   const clickHandler = (x: number, y: number) => {
-    // console.log(bombMap);
-    // console.log('pushCount2', pushCount);
     const newBombMap = structuredClone(bombMap);
-    // console.log(newBombMap);
-    // console.log('pushCount3', pushCount);
-    // console.log(newBombMap);
+    const newUserInputs = structuredClone(userInputs);
 
     if (pushCount === 81) {
-      console.log('if passed');
       let putBomb = 0;
       while (putBomb < 10) {
         const s = Math.floor(Math.random() * 9);
@@ -72,52 +64,27 @@ const Home = () => {
           putBomb += 1;
         }
       }
-      // console.log(newBombMap);
-
-      // setbombMap(newBombMap);
+      setbombMap(newBombMap);
     }
-    console.log(newBombMap);
-    const newlll = searchBomb(newBombMap);
-    setbombMap(newlll);
-    // console.log(searchBomb(bombMap));
+    newUserInputs[y][x] = 1;
+
+    setUserInputs(newUserInputs);
   };
-  console.log('ysacvabis');
+  const numBomb = searchBomb(bombMap, userInputs);
 
   return (
     <div className={styles.container}>
       <div className={styles.board}>
-        {bombMap.map((row, y) =>
+        {numBomb.map((row, y) =>
           row.map((color, x) => (
             <div className={styles.cell} key={`${x}-${y}`} onClick={() => clickHandler(x, y)}>
-              {color === 1 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-300px 0px` }} />
-              )}
-              {color === -1 && (
-                <div className={styles.icon} style={{ backgroundPosition: `0px 0px` }} />
-              )}
-              {color === -2 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-30px 0px` }} />
-              )}
-              {color === -3 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-60px 0px` }} />
-              )}
-              {color === -4 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-90px 0px` }} />
-              )}
-              {color === -5 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-120px 0px` }} />
-              )}
-              {color === -6 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-150px 0px` }} />
-              )}
-              {color === -7 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-180px 0px` }} />
-              )}
-              {color === -8 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-210px 0px` }} />
-              )}
-              {color === -9 && (
-                <div className={styles.icon} style={{ backgroundPosition: `-240px 0px` }} />
+              {numBomb[y][x] === -1 ? (
+                <div className={styles.stone} />
+              ) : (
+                <div
+                  className={styles.icon}
+                  style={{ backgroundPosition: `${-30 * (color - 1)}px 0px` }}
+                />
               )}
             </div>
           )),

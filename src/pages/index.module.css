@@ -15,7 +15,6 @@
 }
 
 .board {
-  /* position: absolute; */
   display: flex;
   flex-wrap: wrap;
   width: 450px;
@@ -39,20 +38,23 @@
   justify-content: center;
   width: 50px;
   height: 50px;
-
-  /* padding: 0;
-  margin: 0 /* top: 0; */
-
-  /* background-color: black; */
 }
 
-.frontboard {
+.frontBoard {
   position: absolute;
   display: flex;
   flex-wrap: wrap;
   width: 450px;
   height: 450px;
   border: solid;
+}
 
-  /* background-color: lightgray; */
+.stone {
+  box-sizing: border-box;
+  display: flex;
+  width: 50px;
+  height: 50px;
+  background-color: darkgray;
+  border: 5px solid;
+  border-color: white gray gray white; /* 上から時計 */
 }
