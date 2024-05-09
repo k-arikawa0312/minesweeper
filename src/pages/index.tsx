@@ -29,9 +29,9 @@ const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
             board[y][x] += 1;
           }
         }
-      }
-      if (bombMap[y] !== undefined && bombMap[y][x] === 1) {
-        board[y][x] = 11;
+        if (bombMap[y] !== undefined && bombMap[y][x] === 1) {
+          board[y][x] = 11;
+        }
       }
     }
   }
