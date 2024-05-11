@@ -39,9 +39,10 @@ const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
   return board;
 };
 
-const openStone (board:number[][])=>{
-    if (board)
-}
+const openStone = (x: number, y: number, board: number[][]) => {
+  if (board[y][x] === 0) {
+  }
+};
 
 const Home = () => {
   const [bombMap, setbombMap] = useState(normalBoard());
