@@ -21,11 +21,9 @@ const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
     for (let y = 0; y < 9; y++) {
       if (userInputs !== undefined && userInputs[y][x] === 1) {
         board[y][x] = 0;
-        for (const direction of directions) {
-          if (
-            board[y + direction[1]] !== undefined &&
-            bombMap[y + direction[1]][x + direction[0]] === 1
-          ) {
+        openStone(x, y, board, bombMap);
+        for (const [dx, dy] of directions) {
+          if (board[y + dy] !== undefined && bombMap[y + dy][x + dx] === 1) {
             board[y][x] += 1;
           }
         }
@@ -39,9 +37,24 @@ const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
   return board;
 };
 
-const openStone = (x: number, y: number, board: number[][]) => {
-  if (board[y][x] === 0) {
+const openStone = (x: number, y: number, board: number[][], bombMap: number[][]) => {
+  for (const [dx, dy] of directions) {
+    if (
+      board[y + dy] !== undefined &&
+      bombMap[y + dy][x + dx] === 0 &&
+      board[y + dy][x + dx] === 0
+    ) {
+      console.log(212);
+      openStone(x + dx, y + dy, board, bombMap);
+      board[y + dy][x + dx] = 0;
+      //  ひらく
+    }
+    if (board[y + dy] !== undefined && board[y + dy][x + dx] !== 0) {
+      console.log(1111);
+      break;
+    }
   }
+  return board;
 };
 
 const Home = () => {
@@ -72,7 +85,7 @@ const Home = () => {
     setUserInputs(newUserInputs);
   };
   const numBomb = searchBomb(bombMap, userInputs);
-  console.log(bombMap);
+  console.log(userInputs);
   console.log(numBomb);
   return (
     <div className={styles.container}>
