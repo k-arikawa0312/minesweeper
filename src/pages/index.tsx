@@ -22,6 +22,10 @@ const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
       if (userInputs !== undefined && userInputs[y][x] === 1) {
         board[y][x] = 0;
         openStone(x, y, board, bombMap);
+        for (const [dy, dx] of canOpen) {
+          console.log(789854);
+          board[dy][dx] = 0;
+        }
         for (const [dx, dy] of directions) {
           if (board[y + dy] !== undefined && bombMap[y + dy][x + dx] === 1) {
             board[y][x] += 1;
@@ -37,24 +41,18 @@ const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
   return board;
 };
 
+const canOpen = [];
+
 const openStone = (x: number, y: number, board: number[][], bombMap: number[][]) => {
-  for (const [dx, dy] of directions) {
-    if (
-      board[y + dy] !== undefined &&
-      bombMap[y + dy][x + dx] === 0 &&
-      board[y + dy][x + dx] === 0
-    ) {
-      console.log(212);
-      openStone(x + dx, y + dy, board, bombMap);
-      board[y + dy][x + dx] = 0;
-      //  ひらく
-    }
-    if (board[y + dy] !== undefined && board[y + dy][x + dx] !== 0) {
-      console.log(1111);
-      break;
-    }
+  if (board[y + 1] === undefined || board[y + 1][x] !== -1 || y + 1 > 9) {
+    return;
   }
-  return board;
+  console.log(555);
+  canOpen.push([y, x]);
+  console.log('a', canOpen);
+  console.log('b', canOpen[0][0]);
+  console.log('c', canOpen[0][1]);
+  openStone(x, y + 1, board, bombMap);
 };
 
 const Home = () => {
@@ -68,18 +66,17 @@ const Home = () => {
     const newBombMap = structuredClone(bombMap);
     const newUserInputs = structuredClone(userInputs);
 
-    if (pushCount === 81) {
-      let putBomb = 0;
-      while (putBomb < 10) {
-        const s = Math.floor(Math.random() * 9);
-        const t = Math.floor(Math.random() * 9);
-        if ((x !== t || y !== s) && newBombMap[s][t] !== 1) {
-          newBombMap[s][t] = 1;
-          putBomb += 1;
-        }
-      }
-      setbombMap(newBombMap);
-    }
+    // if (pushCount === 81) {
+    //   let putBomb = 0;
+    //   while (putBomb < 10) {
+    //     const t = Math.floor(Math.random() * 9);
+    //     if ((x !== t || y !== s) && newBombMap[s][t] !== 1) {
+    //       newBombMap[s][t] = 1;
+    //       putBomb += 1;
+    //     }
+    //   }
+    //   setbombMap(newBombMap);
+    // }
     newUserInputs[y][x] = 1;
 
     setUserInputs(newUserInputs);
