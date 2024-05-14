@@ -21,7 +21,11 @@ const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
     for (let y = 0; y < 9; y++) {
       if (userInputs !== undefined && userInputs[y][x] === 1) {
         board[y][x] = 0;
-
+        for (const [dx, dy] of directions) {
+          if (board[y + dy] !== undefined && bombMap[y + dy][x + dx] === 1) {
+            board[y][x] += 1;
+          }
+        }
         openStone(x, y, board, bombMap, directions[0]);
         console.log(canOpen);
         for (const [dx, dy] of canOpen) {
@@ -65,11 +69,6 @@ const openStone = (
     }
   }
   canOpen.push([x, y]);
-  for (const [dx, dy] of directions) {
-    if (board[y + dy] !== undefined && bombMap[y + dy][x + dx] === 1) {
-      board[y][x] += 1;
-    }
-  }
 
   // console.log('a', canOpen);
   // console.log('c', canOpen[0][1]);
@@ -124,16 +123,16 @@ const Home = () => {
 
     setUserInputs(newUserInputs);
   };
-  const userMap = searchBomb(bombMap, userInputs);
+  const numBomb = searchBomb(bombMap, userInputs);
   console.log(userInputs);
-  console.log(userMap);
+  console.log(numBomb);
   return (
     <div className={styles.container}>
       <div className={styles.board}>
-        {userMap.map((row, y) =>
+        {numBomb.map((row, y) =>
           row.map((color, x) => (
             <div className={styles.cell} key={`${x}-${y}`} onClick={() => clickHandler(x, y)}>
-              {userMap[y][x] === -1 ? (
+              {numBomb[y][x] === -1 ? (
                 <div className={styles.stone} />
               ) : (
                 <div
