@@ -68,7 +68,7 @@ const Home = () => {
   const [userInputs, setUserInputs] = useState(normalBoard());
   const pushCount = bombMap.flat().filter((cell) => cell === 0).length; //ゲーム開始したか
 
-  const clickHandler = (x: number, y: number) => {
+  const clickHandler = (x: number, y: number, isRightClick = false) => {
     const newBombMap = structuredClone(bombMap);
     const newUserInputs = structuredClone(userInputs);
 
@@ -84,19 +84,25 @@ const Home = () => {
       }
       setBombMap(newBombMap);
     }
-
     newUserInputs[y][x] = 1;
+    if (isRightClick) {
+      console.log(561);
+    }
     setUserInputs(newUserInputs);
   };
-
   const userMap = makeBoard(bombMap, userInputs);
-
+  console.log(userInputs);
   return (
     <div className={styles.container}>
       <div className={styles.board}>
         {userMap.map((row, y) =>
           row.map((color, x) => (
-            <div className={styles.cell} key={`${x}-${y}`} onClick={() => clickHandler(x, y)}>
+            <div
+              className={styles.cell}
+              key={`${x}-${y}`}
+              onClick={() => clickHandler(x, y)}
+              onContextMenu={() => clickHandler(x, y, true)}
+            >
               {userMap[y][x] === -1 ? (
                 <div className={styles.stone} />
               ) : (

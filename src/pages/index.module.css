@@ -17,8 +17,8 @@
 .board {
   display: flex;
   flex-wrap: wrap;
-  width: 450px;
-  height: 450px;
+  width: 270px;
+  height: 270px;
   background-color: lightgray;
 }
 
@@ -26,33 +26,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   border: 1px solid gray;
-}
-
-.flontCell {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-}
-
-.frontBoard {
-  position: absolute;
-  display: flex;
-  flex-wrap: wrap;
-  width: 450px;
-  border: solid;
 }
 
 .stone {
   box-sizing: border-box;
   display: flex;
-  width: 50px;
-  height: 50px;
+  width: 30px;
+  height: 30px;
   background-color: darkgray;
   border: 5px solid;
   border-color: white gray gray white; /* 上から時計 */
