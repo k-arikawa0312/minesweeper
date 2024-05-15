@@ -27,6 +27,9 @@ const makeBoard = (bombMap: number[][], userInputs: number[][]) => {
         board[y][x] = 11;
         // alert('Game over');
       }
+      if (userInputs[y][x] === -100) {
+        board[y][x] = -100;
+      }
     }
   }
 
@@ -69,46 +72,65 @@ const Home = () => {
   const pushCount = bombMap.flat().filter((cell) => cell === 0).length; //ゲーム開始したか
 
   const clickHandler = (x: number, y: number, isRightClick = false) => {
+    event.preventDefault();
     const newBombMap = structuredClone(bombMap);
     const newUserInputs = structuredClone(userInputs);
 
-    if (pushCount === 81) {
-      let putBomb = 0;
-      while (putBomb < 10) {
-        const t = Math.floor(Math.random() * 9);
-        const s = Math.floor(Math.random() * 9);
-        if ((x !== t || y !== s) && newBombMap[s][t] !== 1) {
-          newBombMap[s][t] = 1;
-          putBomb += 1;
-        }
-      }
-      setBombMap(newBombMap);
-    }
-    newUserInputs[y][x] = 1;
     if (isRightClick) {
-      console.log(561);
+      if (userInputs[y][x] === 0) {
+        newUserInputs[y][x] = -100;
+      }
+      if (userInputs[y][x] === -100) {
+        newUserInputs[y][x] = 0;
+      }
+    } else {
+      if (pushCount === 81) {
+        let putBomb = 0;
+        while (putBomb < 10) {
+          const t = Math.floor(Math.random() * 9);
+          const s = Math.floor(Math.random() * 9);
+          if ((x !== t || y !== s) && newBombMap[s][t] !== 1) {
+            newBombMap[s][t] = 1;
+            putBomb += 1;
+          }
+        }
+        setBombMap(newBombMap);
+      }
+      newUserInputs[y][x] = 1;
     }
+    console.log(666);
     setUserInputs(newUserInputs);
   };
   const userMap = makeBoard(bombMap, userInputs);
-  console.log(userInputs);
+  console.log('userinputs', userInputs);
+  console.log('usermap', userMap);
   return (
     <div className={styles.container}>
       <div className={styles.board}>
         {userMap.map((row, y) =>
-          row.map((color, x) => (
+          row.map((display, x) => (
             <div
               className={styles.cell}
               key={`${x}-${y}`}
-              onClick={() => clickHandler(x, y)}
+              onClick={() => clickHandler(x, y, false)}
               onContextMenu={() => clickHandler(x, y, true)}
             >
-              {userMap[y][x] === -1 ? (
-                <div className={styles.stone} />
-              ) : (
+              {display < 0 && (
+                <div className={styles.stone}>
+                  {
+                    <div
+                      className={styles.icon}
+                      style={{
+                        backgroundPosition: display === -100 ? `-270px 0px` : `450px 0px`,
+                      }}
+                    />
+                  }
+                </div>
+              )}
+              {display >= 0 && (
                 <div
                   className={styles.icon}
-                  style={{ backgroundPosition: `${-30 * (color - 1)}px 0px` }}
+                  style={{ backgroundPosition: `${-30 * (display - 1)}px 0px` }}
                 />
               )}
             </div>

@@ -9,6 +9,7 @@
 }
 
 .icon {
+  display: flex;
   width: 30px;
   height: 30px;
   background: url('~/src/assets/images/icons.png') no-repeat;
@@ -17,26 +18,30 @@
 .board {
   display: flex;
   flex-wrap: wrap;
-  width: 270px;
-  height: 270px;
+  width: 315px;
+  height: 315px;
   background-color: lightgray;
 }
 
 .cell {
-  display: flex;
+  box-sizing: border-box;
+  display: grid;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border: 1px solid gray;
 }
 
 .stone {
+  position: relative;
   box-sizing: border-box;
   display: flex;
-  width: 30px;
-  height: 30px;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 35px;
+  height: 35px;
   background-color: darkgray;
-  border: 5px solid;
-  border-color: white gray gray white; /* 上から時計 */
+  border: 4px solid;
+  border-color: white gray gray white;
 }
