@@ -71,6 +71,11 @@ const Home = () => {
   const [userInputs, setUserInputs] = useState(normalBoard());
   const pushCount = bombMap.flat().filter((cell) => cell === 0).length; //ゲーム開始したか
 
+  const resetGame = () => {
+    setBombMap(normalBoard());
+    setUserInputs(normalBoard());
+  };
+
   const clickHandler = (x: number, y: number, isRightClick = false) => {
     event.preventDefault();
     const newBombMap = structuredClone(bombMap);
@@ -106,6 +111,11 @@ const Home = () => {
   console.log('usermap', userMap);
   return (
     <div className={styles.container}>
+      <button
+        className={styles.icon}
+        style={{ backgroundPosition: `-331px -2px` }}
+        onClick={resetGame}
+      />
       <div className={styles.board}>
         {userMap.map((row, y) =>
           row.map((display, x) => (
