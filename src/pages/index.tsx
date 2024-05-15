@@ -15,27 +15,25 @@ const directions = [
 const normalBoard = (normal = 0, row = 9, column = 9): number[][] =>
   Array.from({ length: row }, () => Array.from({ length: column }, () => normal));
 
-const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
+const makeBoard = (bombMap: number[][], userInputs: number[][]) => {
   const board = normalBoard(-1);
   for (let x = 0; x < 9; x++) {
     for (let y = 0; y < 9; y++) {
-      if (userInputs !== undefined && userInputs[y][x] === 1) {
+      if (userInputs !== undefined && userInputs[y][x] === 1 && bombMap[y][x] !== 1) {
         board[y][x] = 0;
+        openStone(x, y, board, bombMap, directions[0]);
         for (const [dx, dy] of directions) {
-          if (board[y + dy] !== undefined && bombMap[y + dy][x + dx] === 1) {
-            board[y][x] += 1;
+          if (board[y + dy] !== undefined) {
+            board[y][x] = findNearBomb(x, y, bombMap);
           }
         }
-        openStone(x, y, board, bombMap, directions[0]);
-        console.log(canOpen);
         for (const [dx, dy] of canOpen) {
-          console.log(789854);
           board[dy][dx] = 0;
         }
-
-        if (bombMap[y] !== undefined && bombMap[y][x] === 1) {
-          board[y][x] = 11;
-        }
+      }
+      if (bombMap[y] !== undefined && bombMap[y][x] === 1 && userInputs[y][x] === 1) {
+        board[y][x] = 11;
+        // alert('Game over');
       }
     }
   }
@@ -43,6 +41,14 @@ const searchBomb = (bombMap: number[][], userInputs: number[][]) => {
   return board;
 };
 
+const findNearBomb = (x: number, y: number, bombMap: number[][]) => {
+  let nearBomb = 0;
+  for (const [dx, dy] of directions) {
+    if (bombMap[y + dy] !== undefined && bombMap[y + dy][x + dx] === 1) nearBomb += 1;
+  }
+  console.log(x, y, nearBomb);
+  return nearBomb;
+};
 const canOpen = [];
 const bombPos = [];
 
@@ -53,9 +59,7 @@ const openStone = (
   bombMap: number[][],
   direction: number[],
 ) => {
-  console.log(x, y);
-
-  if (board[y] === undefined || x < 0 || x > 8 || bombMap[y][x] === 1) {
+  if (board[y] === undefined || x < 0 || x > 8) {
     return;
   }
   for (const [nx, ny] of canOpen) {
@@ -68,11 +72,17 @@ const openStone = (
       return;
     }
   }
+  for (const [dx, dy] of directions) {
+    if (bombMap[y + dy] !== undefined && bombMap[y + dy][x + dx] !== 1) {
+      console.log(78);
+      board[y + dy][x + dx] = findNearBomb(x + dx, y + dy, bombMap);
+      board[y][x] = findNearBomb(x, y, bombMap);
+    }
+  }
+
   canOpen.push([x, y]);
 
-  // console.log('a', canOpen);
-  // console.log('c', canOpen[0][1]);
-  // console.log('b'x, canOpen[0][0]);
+  if (findNearBomb(x, y, bombMap) !== 0) return;
   openStone(x + directions[0][0], y + directions[0][1], board, bombMap, directions[0]);
   openStone(x + directions[4][0], y + directions[4][1], board, bombMap, directions[4]);
   openStone(x + directions[2][0], y + directions[2][1], board, bombMap, directions[2]);
@@ -81,6 +91,10 @@ const openStone = (
   openStone(x + directions[6][0], y + directions[6][1], board, bombMap, directions[6]);
   openStone(x + directions[7][0], y + directions[7][1], board, bombMap, directions[7]);
   openStone(x + directions[1][0], y + directions[1][1], board, bombMap, directions[1]);
+  for (const [dx, dy] of directions) {
+    if (bombMap[y + dy] !== undefined && bombMap[y + dy][x + dx] !== 1)
+      board[y + dy][x + dx] = findNearBomb(x, y, bombMap);
+  }
 };
 const prePosition = [0, 0];
 const Home = () => {
@@ -123,16 +137,17 @@ const Home = () => {
 
     setUserInputs(newUserInputs);
   };
-  const numBomb = searchBomb(bombMap, userInputs);
-  console.log(userInputs);
-  console.log(numBomb);
+  const userMap = makeBoard(bombMap, userInputs);
+  console.log('userInputs', userInputs);
+  console.log('userMap', userMap);
+  console.log('bombMap', bombMap);
   return (
     <div className={styles.container}>
       <div className={styles.board}>
-        {numBomb.map((row, y) =>
+        {userMap.map((row, y) =>
           row.map((color, x) => (
             <div className={styles.cell} key={`${x}-${y}`} onClick={() => clickHandler(x, y)}>
-              {numBomb[y][x] === -1 ? (
+              {userMap[y][x] === -1 ? (
                 <div className={styles.stone} />
               ) : (
                 <div
