@@ -82,12 +82,7 @@ const Home = () => {
     const newUserInputs = structuredClone(userInputs);
 
     if (isRightClick) {
-      if (userInputs[y][x] === 0) {
-        newUserInputs[y][x] = -100;
-      }
-      if (userInputs[y][x] === -100) {
-        newUserInputs[y][x] = 0;
-      }
+      newUserInputs[y][x] = -100 - userInputs[y][x];
     } else {
       if (pushCount === 81) {
         let putBomb = 0;
@@ -103,12 +98,12 @@ const Home = () => {
       }
       newUserInputs[y][x] = 1;
     }
-    console.log(666);
     setUserInputs(newUserInputs);
   };
   const userMap = makeBoard(bombMap, userInputs);
   console.log('userinputs', userInputs);
   console.log('usermap', userMap);
+  console.log();
   return (
     <div className={styles.container}>
       <button
