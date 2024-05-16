@@ -12,6 +12,8 @@ const directions = [
   [-1, 1],
 ];
 
+let time = 0;
+
 const normalBoard = (normal = 0, row = 9, column = 9) =>
   Array.from({ length: row }, () => Array.from({ length: column }, () => normal));
 
@@ -74,7 +76,12 @@ const Home = () => {
   const resetGame = () => {
     setBombMap(normalBoard());
     setUserInputs(normalBoard());
+    time = 0;
   };
+
+  const interval = setInterval(function () {
+    time += 1;
+  }, 10000);
 
   const clickHandler = (x: number, y: number, isRightClick = false) => {
     event.preventDefault();
@@ -106,41 +113,44 @@ const Home = () => {
   console.log();
   return (
     <div className={styles.container}>
-      <button
-        className={styles.icon}
-        style={{ backgroundPosition: `-331px -2px` }}
-        onClick={resetGame}
-      />
-      <div className={styles.board}>
-        {userMap.map((row, y) =>
-          row.map((display, x) => (
-            <div
-              className={styles.cell}
-              key={`${x}-${y}`}
-              onClick={() => clickHandler(x, y, false)}
-              onContextMenu={() => clickHandler(x, y, true)}
-            >
-              {display < 0 && (
-                <div className={styles.stone}>
-                  {
-                    <div
-                      className={styles.icon}
-                      style={{
-                        backgroundPosition: display === -100 ? `-270px 0px` : `450px 0px`,
-                      }}
-                    />
-                  }
-                </div>
-              )}
-              {display >= 0 && (
-                <div
-                  className={styles.icon}
-                  style={{ backgroundPosition: `${-30 * (display - 1)}px 0px` }}
-                />
-              )}
-            </div>
-          )),
-        )}
+      <div className={styles.backboard}>
+        <button
+          className={styles.icon}
+          style={{ backgroundPosition: `-331px -2px` }}
+          onClick={resetGame}
+        />
+        <div id="time">{time}</div>
+        <div className={styles.board}>
+          {userMap.map((row, y) =>
+            row.map((display, x) => (
+              <div
+                className={styles.cell}
+                key={`${x}-${y}`}
+                onClick={() => clickHandler(x, y, false)}
+                onContextMenu={() => clickHandler(x, y, true)}
+              >
+                {display < 0 && (
+                  <div className={styles.stone}>
+                    {
+                      <div
+                        className={styles.icon}
+                        style={{
+                          backgroundPosition: display === -100 ? `-270px 0px` : `450px 0px`,
+                        }}
+                      />
+                    }
+                  </div>
+                )}
+                {display >= 0 && (
+                  <div
+                    className={styles.icon}
+                    style={{ backgroundPosition: `${-30 * (display - 1)}px 0px` }}
+                  />
+                )}
+              </div>
+            )),
+          )}
+        </div>
       </div>
     </div>
   );
