@@ -12,8 +12,6 @@ const directions = [
   [-1, 1],
 ];
 
-let time = 0;
-
 const normalBoard = (normal = 0, row = 9, column = 9) =>
   Array.from({ length: row }, () => Array.from({ length: column }, () => normal));
 
@@ -29,12 +27,12 @@ const makeBoard = (bombMap: number[][], userInputs: number[][]) => {
         board[y][x] = 11;
         // alert('Game over');
       }
-      if (userInputs[y][x] === -100) {
+      if (userInputs[y][x] === -100 && board[y][x] === -1) {
         board[y][x] = -100;
       }
     }
   }
-
+  console.log('board', board);
   return board;
 };
 
@@ -76,12 +74,7 @@ const Home = () => {
   const resetGame = () => {
     setBombMap(normalBoard());
     setUserInputs(normalBoard());
-    time = 0;
   };
-
-  const interval = setInterval(function () {
-    time += 1;
-  }, 10000);
 
   const clickHandler = (x: number, y: number, isRightClick = false) => {
     event.preventDefault();
@@ -89,7 +82,8 @@ const Home = () => {
     const newUserInputs = structuredClone(userInputs);
 
     if (isRightClick) {
-      newUserInputs[y][x] = -100 - userInputs[y][x];
+      if ((userInputs[y][x] === 1 && bombMap[y][x] === 1) === false)
+        newUserInputs[y][x] = -100 - userInputs[y][x];
     } else {
       if (pushCount === 81) {
         let putBomb = 0;
@@ -110,16 +104,22 @@ const Home = () => {
   const userMap = makeBoard(bombMap, userInputs);
   console.log('userinputs', userInputs);
   console.log('usermap', userMap);
-  console.log();
+  console.log('board', userMap);
+
   return (
     <div className={styles.container}>
+      <div>
+        <button>初級</button>
+        <button>中級</button>
+        <button>上級</button>
+      </div>
       <div className={styles.backboard}>
         <button
           className={styles.icon}
           style={{ backgroundPosition: `-331px -2px` }}
           onClick={resetGame}
         />
-        <div id="time">{time}</div>
+        <div id="time">{}</div>
         <div className={styles.board}>
           {userMap.map((row, y) =>
             row.map((display, x) => (
