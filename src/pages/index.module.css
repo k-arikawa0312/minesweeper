@@ -60,3 +60,11 @@
   border: 10px solid gray;
   border-color: rgb(240 240 240) gray gray rgb(240 240 240);
 }
+
+.button {
+  display: flex;
+  align-items: center;
+  width: 40px;
+  height: 20px;
+  background-color: gray;
+}

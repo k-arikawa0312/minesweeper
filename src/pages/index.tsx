@@ -67,7 +67,37 @@ const openStone = (x: number, y: number, board: number[][], bombMap: number[][],
 };
 
 const Home = () => {
-  const [bombMap, setBombMap] = useState(normalBoard());
+  const setLevel = (inputClick: number) => {
+    const newLevel = structuredClone(level);
+
+    if (inputClick === 1) {
+      newLevel[0][0] = 10;
+      newLevel[0][1] = 9;
+      newLevel[0][2] = 9;
+      resetGame();
+      console.log(1);
+    }
+    if (inputClick === 2) {
+      newLevel[0][0] = 40;
+      newLevel[0][1] = 16;
+      newLevel[0][2] = 16;
+      resetGame();
+      console.log(2);
+    }
+    if (inputClick === 3) {
+      newLevel[0][0] = 99;
+      newLevel[0][1] = 30;
+      newLevel[0][2] = 16;
+      console.log(3);
+      resetGame();
+    }
+    setNewLevel(newLevel);
+  };
+
+  const [level, setNewLevel] = useState([
+    [10, 9, 9], //爆弾の数 横 縦
+  ]);
+  const [bombMap, setBombMap] = useState(normalBoard(0, level[0][1], level[0][2]));
   const [userInputs, setUserInputs] = useState(normalBoard());
   const pushCount = bombMap.flat().filter((cell) => cell === 0).length; //ゲーム開始したか
 
@@ -87,7 +117,7 @@ const Home = () => {
     } else {
       if (pushCount === 81) {
         let putBomb = 0;
-        while (putBomb < 10) {
+        while (putBomb < level[0][0]) {
           const t = Math.floor(Math.random() * 9);
           const s = Math.floor(Math.random() * 9);
           if ((x !== t || y !== s) && newBombMap[s][t] !== 1) {
@@ -109,18 +139,21 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div>
-        <button>初級</button>
-        <button>中級</button>
-        <button>上級</button>
+        <button onClick={() => setLevel(1)}>初級</button>
+        <button onClick={() => setLevel(2)}>中級</button>
+        <button onClick={() => setLevel(3)}>上級</button>
       </div>
-      <div className={styles.backboard}>
+      <div
+        className={styles.backboard}
+        style={{ width: level[0][1] * 41.1, height: level[0][2] * 47.8 }}
+      >
         <button
           className={styles.icon}
           style={{ backgroundPosition: `-331px -2px` }}
           onClick={resetGame}
         />
         <div id="time">{}</div>
-        <div className={styles.board}>
+        <div className={styles.board} style={{ width: level[0][1] * 35, height: level[0][2] * 35 }}>
           {userMap.map((row, y) =>
             row.map((display, x) => (
               <div
