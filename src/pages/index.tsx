@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.css';
-import { useAmp } from 'next/amp';
+
 const directions = [
   [0, 1],
   [0, -1],
@@ -25,9 +24,25 @@ const Home = () => {
   const [level, setNewLevel] = useState([10, 9, 9]); //爆弾の数 横 縦
   const [bombMap, setBombMap] = useState(normalBoard(0, level[1], level[2]));
   const [userInputs, setUserInputs] = useState(normalBoard(0, level[1], level[2]));
+  const [isActive, setIsActive] = useState(false);
   useEffect(() => {
     resetGame();
   }, [level]);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    let interval = 0;
+    // タイマーを開始する
+    if (isActive) {
+      interval = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds + 1);
+      }, 1000);
+    }
+
+    // クリーンアップ関数を返す - コンポーネントがアンマウントされたときにタイマーをクリア
+    return () => clearInterval(interval);
+  }, [isActive]);
+
   const setLevel = (inputClick: number) => {
     if (inputClick === 1) {
       setNewLevel([10, 9, 9]);
@@ -90,6 +105,8 @@ const Home = () => {
   const resetGame = () => {
     setBombMap(normalBoard(0, level[2], level[1]));
     setUserInputs(normalBoard(0, level[2], level[1]));
+    setSeconds(0);
+    setIsActive(false);
   };
   const clickHandler = (e: any, x: number, y: number, isRightClick = false) => {
     e.preventDefault();
@@ -108,6 +125,7 @@ const Home = () => {
       if (newUserInputs[y] !== undefined) {
         const pushCount = newUserInputs.flat().filter((cell) => cell === 1).length;
         if (pushCount === 0) {
+          setIsActive(true);
           let putBomb = 0;
           while (putBomb < level[0]) {
             const t = Math.floor(Math.random() * level[1]);
@@ -128,8 +146,15 @@ const Home = () => {
     // console.log('userInputs', userInputs);
   };
   const userMap = makeBoard(bombMap, userInputs);
-  console.log('userMap', userMap);
 
+  if (isActive) {
+    userMap.flat().filter((cell) => cell === 11).length !== 0 ||
+    userMap.flat().filter((cell) => cell === -1).length +
+      userMap.flat().filter((cell) => cell === -100).length ===
+      level[0]
+      ? setIsActive(false)
+      : console.log(1);
+  }
   return (
     <div className={styles.container}>
       <p>
@@ -156,9 +181,7 @@ const Home = () => {
             style={{ backgroundPosition: `-331px -2px ` }}
             onClick={resetGame}
           />
-          <div className={styles.gameInfo}>
-            {userMap.flat().filter((cell) => cell === 11).length}
-          </div>
+          <div className={styles.gameInfo}>{seconds}</div>
         </div>
         <div className={styles.board} style={{ width: level[1] * 35, height: level[2] * 35 }}>
           {userMap.map((row, y) =>
