@@ -222,10 +222,16 @@ const Home = () => {
                     />
                   </div>
                 )}
-                {display >= 0 && (
+                {display >= 0 && display !== 11 && (
                   <div
                     className={styles.icon}
                     style={{ backgroundPosition: `${-30 * (display - 1)}px 0px ` }}
+                  />
+                )}
+                {display === 11 && (
+                  <div
+                    className={styles.icon}
+                    style={{ backgroundPosition: `-300px 0px`, backgroundColor: '#ff1111' }}
                   />
                 )}
               </div>
