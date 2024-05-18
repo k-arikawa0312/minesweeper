@@ -157,15 +157,6 @@ const Home = () => {
   }
   return (
     <div className={styles.container}>
-      <p>
-        {userMap.flat().filter((cell) => cell === 11).length !== 0 ||
-        userMap.flat().filter((cell) => cell === -1).length +
-          userMap.flat().filter((cell) => cell === -100).length ===
-          level[0]
-          ? 'おわったよ'
-          : ''}
-      </p>
-
       <div>
         <button onClick={() => setLevel(1)}>初級</button>
         <button onClick={() => setLevel(2)}>中級</button>
@@ -178,7 +169,16 @@ const Home = () => {
           </div>
           <button
             className={styles.icon}
-            style={{ backgroundPosition: `-331px -2px ` }}
+            style={{
+              backgroundPosition:
+                userMap.flat().filter((cell) => cell === 11).length === 0
+                  ? userMap.flat().filter((cell) => cell === -1).length +
+                      userMap.flat().filter((cell) => cell === -100).length ===
+                    level[0]
+                    ? `-361px -2px`
+                    : `-331px -2px`
+                  : `-391px -2px`,
+            }}
             onClick={resetGame}
           />
           <div className={styles.gameInfo}>{seconds}</div>
