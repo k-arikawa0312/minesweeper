@@ -21,7 +21,7 @@
   flex-wrap: wrap;
   width: 315px;
   height: 315px;
-  margin-top: 30px;
+  margin-top: 15px;
   background-color: lightgray;
 }
 
@@ -56,15 +56,29 @@
   justify-content: center;
   width: 370px;
   height: 430px;
+  margin-top: 3px;
   background-color: darkgray;
   border: 10px solid gray;
   border-color: rgb(240 240 240) gray gray rgb(240 240 240);
 }
 
-.button {
+.box {
   display: flex;
   align-items: center;
-  width: 40px;
-  height: 20px;
-  background-color: gray;
+  justify-content: center;
+  width: 315px;
+  height: 60px;
+  border: 5px solid;
+  border-color: gray white white gray;
+}
+
+.gameInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 45px;
+  font-size: 30px;
+  color: red;
+  background-color: black;
 }
