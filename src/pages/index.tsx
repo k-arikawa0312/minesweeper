@@ -61,7 +61,13 @@ const Home = () => {
           openStone(x, y, board, bombMap, []);
         }
         if (bombMap[y] !== undefined && bombMap[y][x] === 1 && userInputs[y][x] === 1) {
-          board[y][x] = 11;
+          for (let y = 0; y < level[2]; y++) {
+            for (let x = 0; x < level[1]; x++) {
+              if (bombMap[y][x] === 1) {
+                board[y][x] = 11;
+              }
+            }
+          }
         }
         if (userInputs[y] !== undefined && userInputs[y][x] === -100 && board[y][x] === -1) {
           board[y][x] = -100;
@@ -120,7 +126,14 @@ const Home = () => {
 
     if (isRightClick) {
       if (userInputs[y] !== undefined && (userInputs[y][x] === 1 && bombMap[y][x] === 1) === false)
-        newUserInputs[y][x] = -100 - userInputs[y][x];
+        if (
+          userMap.flat().filter((cell) => cell === -1).length +
+            userMap.flat().filter((cell) => cell === -100).length !==
+            level[0] &&
+          userMap.flat().filter((cell) => cell === 11).length === 0
+        ) {
+          newUserInputs[y][x] = -100 - userInputs[y][x];
+        }
     } else {
       if (newUserInputs[y] !== undefined) {
         const pushCount = newUserInputs.flat().filter((cell) => cell === 1).length;
@@ -137,7 +150,14 @@ const Home = () => {
           }
           setBombMap(newBombMap);
         }
-        newUserInputs[y][x] = 1;
+        if (
+          userMap.flat().filter((cell) => cell === -1).length +
+            userMap.flat().filter((cell) => cell === -100).length !==
+            level[0] &&
+          userMap.flat().filter((cell) => cell === 11).length === 0
+        ) {
+          newUserInputs[y][x] = 1;
+        }
       }
     }
     setUserInputs(newUserInputs);
