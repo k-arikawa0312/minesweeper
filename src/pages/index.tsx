@@ -181,6 +181,7 @@ const Home = () => {
         <button onClick={() => setLevel(1)}>初級</button>
         <button onClick={() => setLevel(2)}>中級</button>
         <button onClick={() => setLevel(3)}>上級</button>
+        <button onClick={() => setLevel(4)}>カスタム</button>
       </div>
       <div className={styles.backboard} style={{ width: level[1] * 41.1, height: level[2] * 47.8 }}>
         <div className={styles.box} style={{ width: level[1] * 35 }}>
@@ -198,6 +199,8 @@ const Home = () => {
                     ? `-361px -2px`
                     : `-331px -2px`
                   : `-391px -2px`,
+              height: 30,
+              width: 30,
             }}
             onClick={resetGame}
           />
