@@ -237,9 +237,9 @@ const Home = () => {
               tentativeLevel.selectHeight,
             ])
           }
-          style={{ width: 70, height: 30 }}
+          style={{ width: 100, height: 30 }}
         >
-          カスタム
+          カスタム反映
         </button>
       </div>
       <div
