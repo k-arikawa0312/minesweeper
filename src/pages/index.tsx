@@ -25,7 +25,11 @@ const Home = () => {
   const [bombMap, setBombMap] = useState(normalBoard(0, level[1], level[2]));
   const [userInputs, setUserInputs] = useState(normalBoard(0, level[1], level[2]));
   const [isActive, setIsActive] = useState(false);
-  const [tentativeLevel, setTentativeLevel] = useState([1, 1, 1]);
+  const [tentativeLevel, setTentativeLevel] = useState({
+    numBomb: 1,
+    selectWidth: 1,
+    selectHeight: 1,
+  });
 
   useEffect(() => {
     resetGame();
@@ -41,7 +45,6 @@ const Home = () => {
       }, 1000);
     }
 
-    // クリーンアップ関数を返す - コンポーネントがアンマウントされたときにタイマーをクリア
     return () => clearInterval(interval);
   }, [isActive]);
 
@@ -167,8 +170,8 @@ const Home = () => {
     }
     setUserInputs(newUserInputs);
 
-    console.log(bombMap.flat().filter((cell) => cell === 1).length);
     console.log('userInputs', userInputs);
+    console.log('ten', tentativeLevel);
   };
   const userMap = makeBoard(bombMap, userInputs);
 
@@ -178,7 +181,7 @@ const Home = () => {
       userMap.flat().filter((cell) => cell === -100).length ===
       level[0]
       ? setIsActive(false)
-      : console.log(1);
+      : console.log();
   }
   return (
     <div className={styles.container}>
@@ -186,31 +189,28 @@ const Home = () => {
         <label>幅</label>
         <input
           type="number"
-          id="selectWidth"
-          value={setTentativeLevel[0]}
+          value={...tentativeLevel,selectWidth:}
           min={1}
           max={100}
-          onChange={(e) => setTentativeLevel(e.target.value)}
+          onChange={(e) => {...tentativeLevel,numBomb:e.target.value}}
           style={{ width: 50, height: 20 }}
         />
         <label>高さ</label>
         <input
           type="number"
-          id="selectHeight"
-          value={setTentativeLevel[1]}
+          value={tentativeLevel[1]}
           min={1}
           max={100}
-          onChange={(e) => setTentativeLevel(e.target.value)}
+          onChange={(e) => setTentativeLevel()}
           style={{ width: 50, height: 20 }}
         />
         <label>爆弾の数</label>
         <input
           type="number"
-          id="selectNumBomb"
           min={1}
           max={10000}
-          value={setTentativeLevel[2]}
-          onChange={(e) => (setTentativeLevel[2] = e.target.value)}
+          value={tentativeLevel[2]}
+          onChange={(e) => setTentativeLevel(e.target.value)}
           style={{ width: 50, height: 20 }}
         />
       </div>
