@@ -12,7 +12,8 @@ const directions = [
   [-1, 1],
 ];
 
-const clickedBomb: number[] = [-1, -1];
+const randomBomb: string[] = [];
+const clickedBomb: string[] = [];
 
 const normalBoard = (normal = 0, row: number, column: number) =>
   Array.from({ length: row }, () => Array.from({ length: column }, () => normal));
@@ -33,6 +34,7 @@ const Home = () => {
     selectWidth: 1,
     selectHeight: 1,
   });
+  const [isCustom, setIsCustom] = useState(false);
 
   useEffect(() => {
     resetGame();
@@ -63,7 +65,7 @@ const Home = () => {
         if (bombMap[y] !== undefined && bombMap[y][x] === 1 && userInputs[y][x] === 1) {
           for (let y = 0; y < level[2]; y++) {
             for (let x = 0; x < level[1]; x++) {
-              if (bombMap[y][x] === 1) {
+              if (bombMap[y] !== undefined && bombMap[y][x] === 1) {
                 board[y][x] = 11;
               }
             }
@@ -113,6 +115,7 @@ const Home = () => {
     setUserInputs(normalBoard(0, level[2], level[1]));
     setSeconds(0);
     setIsActive(false);
+    clickedBomb.length = 0;
   };
   /* eslint @typescript-eslint/no-explicit-any: 0 */
   const clickHandler = (e: any, x: number, y: number, isRightClick = false) => {
@@ -141,10 +144,12 @@ const Home = () => {
         if (pushCount === 0) {
           setIsActive(true);
           let putBomb = 0;
+          randomBomb.push(`${x}-${y}`);
           while (putBomb < level[0]) {
             const t = Math.floor(Math.random() * level[1]);
             const s = Math.floor(Math.random() * level[2]);
-            if (x !== t && y !== s && newBombMap[s][t] !== 1) {
+            if (randomBomb.includes(`${t}-${s}`)) continue;
+            if (newBombMap[s] !== undefined && newBombMap[s][t] !== 1) {
               newBombMap[s][t] = 1;
               putBomb += 1;
             }
@@ -160,8 +165,7 @@ const Home = () => {
           newUserInputs[y][x] = 1;
         }
         if (newUserInputs[y][x] === 1 && bombMap[y][x] === 1) {
-          clickedBomb.push(y);
-          clickedBomb.push(x);
+          clickedBomb.push(`${x}-${y}`);
         }
       }
     }
@@ -174,6 +178,19 @@ const Home = () => {
   console.log('userInputs', userInputs);
   console.log(clickedBomb);
 
+  const clickedClass = (inputClick: number) => {
+    setIsCustom(false);
+    if (inputClick === 1) {
+      setNewLevel([10, 9, 9]);
+    }
+    if (inputClick === 2) {
+      setNewLevel([40, 16, 16]);
+    }
+    if (inputClick === 3) {
+      setNewLevel([99, 30, 16]);
+    }
+  };
+
   if (isActive) {
     userMap.flat().filter((cell) => cell === 11).length !== 0 ||
     userMap.flat().filter((cell) => cell === -1).length +
@@ -184,7 +201,7 @@ const Home = () => {
   }
   return (
     <div className={styles.container}>
-      <div>
+      <div style={{ visibility: isCustom ? 'visible' : 'hidden' }}>
         <label>幅</label>
         <input
           type="number"
@@ -218,17 +235,6 @@ const Home = () => {
           }
           style={{ width: 50, height: 20 }}
         />
-      </div>
-      <div>
-        <button onClick={() => setNewLevel([10, 9, 9])} style={{ width: 50, height: 30 }}>
-          初級
-        </button>
-        <button onClick={() => setNewLevel([40, 16, 16])} style={{ width: 50, height: 30 }}>
-          中級
-        </button>
-        <button onClick={() => setNewLevel([99, 30, 16])} style={{ width: 50, height: 30 }}>
-          上級
-        </button>
         <button
           onClick={() =>
             setNewLevel([
@@ -237,9 +243,23 @@ const Home = () => {
               tentativeLevel.selectHeight,
             ])
           }
-          style={{ width: 100, height: 30 }}
+          style={{ width: 50, height: 30 }}
         >
-          カスタム反映
+          反映
+        </button>
+      </div>
+      <div>
+        <button onClick={() => clickedClass(1)} style={{ width: 50, height: 30 }}>
+          初級
+        </button>
+        <button onClick={() => clickedClass(2)} style={{ width: 50, height: 30 }}>
+          中級
+        </button>
+        <button onClick={() => clickedClass(3)} style={{ width: 50, height: 30 }}>
+          上級
+        </button>
+        <button onClick={() => setIsCustom(true)} style={{ width: 70, height: 30 }}>
+          カスタム
         </button>
       </div>
       <div
@@ -308,9 +328,7 @@ const Home = () => {
                     style={{
                       backgroundPosition: `-300px 0px`,
                       backgroundColor:
-                        clickedBomb.includes(y) === true && clickedBomb.includes(x) === true
-                          ? '#ff1111'
-                          : '#d3d3d3',
+                        clickedBomb.includes(`${x}-${y}`) === true ? '#ff1111' : '#d3d3d3',
                     }}
                   />
                 )}
