@@ -11,6 +11,9 @@ const directions = [
   [-1, 0],
   [-1, 1],
 ];
+
+const clickedBomb: number[] = [-1, -1];
+
 const normalBoard = (normal = 0, row: number, column: number) =>
   Array.from({ length: row }, () => Array.from({ length: column }, () => normal));
 const findNearBomb = (x: number, y: number, bombMap: number[][]) => {
@@ -156,15 +159,20 @@ const Home = () => {
         ) {
           newUserInputs[y][x] = 1;
         }
+        if (newUserInputs[y][x] === 1 && bombMap[y][x] === 1) {
+          clickedBomb.push(y);
+          clickedBomb.push(x);
+        }
       }
     }
     setUserInputs(newUserInputs);
 
-    console.log('userInputs', userInputs);
     console.log('ten', tentativeLevel);
     console.log(userMap);
   };
   const userMap = makeBoard(bombMap, userInputs);
+  console.log('userInputs', userInputs);
+  console.log(clickedBomb);
 
   if (isActive) {
     userMap.flat().filter((cell) => cell === 11).length !== 0 ||
@@ -297,7 +305,13 @@ const Home = () => {
                 {display === 11 && (
                   <div
                     className={styles.icon}
-                    style={{ backgroundPosition: `-300px 0px`, backgroundColor: '#ff1111' }}
+                    style={{
+                      backgroundPosition: `-300px 0px`,
+                      backgroundColor:
+                        clickedBomb.includes(y) === true && clickedBomb.includes(x) === true
+                          ? '#ff1111'
+                          : '#d3d3d3',
+                    }}
                   />
                 )}
               </div>
