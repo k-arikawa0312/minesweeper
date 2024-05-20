@@ -189,19 +189,23 @@ const Home = () => {
         <label>幅</label>
         <input
           type="number"
-          value={...tentativeLevel,selectWidth:}
+          value={tentativeLevel.selectWidth}
           min={1}
           max={100}
-          onChange={(e) => {...tentativeLevel,numBomb:e.target.value}}
+          onChange={(e) =>
+            setTentativeLevel({ ...tentativeLevel, selectWidth: Number(e.target.value) })
+          }
           style={{ width: 50, height: 20 }}
         />
         <label>高さ</label>
         <input
           type="number"
-          value={tentativeLevel[1]}
+          value={tentativeLevel.selectHeight}
           min={1}
           max={100}
-          onChange={(e) => setTentativeLevel()}
+          onChange={(e) =>
+            setTentativeLevel({ ...tentativeLevel, selectHeight: Number(e.target.value) })
+          }
           style={{ width: 50, height: 20 }}
         />
         <label>爆弾の数</label>
@@ -209,8 +213,10 @@ const Home = () => {
           type="number"
           min={1}
           max={10000}
-          value={tentativeLevel[2]}
-          onChange={(e) => setTentativeLevel(e.target.value)}
+          value={tentativeLevel.numBomb}
+          onChange={(e) =>
+            setTentativeLevel({ ...tentativeLevel, numBomb: Number(e.target.value) })
+          }
           style={{ width: 50, height: 20 }}
         />
       </div>
