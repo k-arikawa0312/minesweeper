@@ -89,7 +89,7 @@ const Home = () => {
     //   // 範囲外の座標は無視します
     //   return;
     // }
-
+    console.log(1111);
     if (board[y] === undefined || x < 0 || x >= level[1]) return;
 
     if (visited.includes(`${x}-${y}`)) {
@@ -116,6 +116,7 @@ const Home = () => {
     setSeconds(0);
     setIsActive(false);
     clickedBomb.length = 0;
+    randomBomb.length = 0;
   };
   /* eslint @typescript-eslint/no-explicit-any: 0 */
   const clickHandler = (e: any, x: number, y: number, isRightClick = false) => {
@@ -148,6 +149,7 @@ const Home = () => {
           while (putBomb < level[0]) {
             const t = Math.floor(Math.random() * level[1]);
             const s = Math.floor(Math.random() * level[2]);
+            console.log(99595);
             if (randomBomb.includes(`${t}-${s}`)) continue;
             if (newBombMap[s] !== undefined && newBombMap[s][t] !== 1) {
               newBombMap[s][t] = 1;
@@ -189,6 +191,12 @@ const Home = () => {
     if (inputClick === 3) {
       setNewLevel([99, 30, 16]);
     }
+    resetGame();
+  };
+
+  const reflectCustom = () => {
+    setNewLevel([tentativeLevel.numBomb, tentativeLevel.selectWidth, tentativeLevel.selectHeight]);
+    resetGame();
   };
 
   if (isActive) {
@@ -235,16 +243,7 @@ const Home = () => {
           }
           style={{ width: 50, height: 20 }}
         />
-        <button
-          onClick={() =>
-            setNewLevel([
-              tentativeLevel.numBomb,
-              tentativeLevel.selectWidth,
-              tentativeLevel.selectHeight,
-            ])
-          }
-          style={{ width: 50, height: 30 }}
-        >
+        <button onClick={reflectCustom} style={{ width: 50, height: 30 }}>
           反映
         </button>
       </div>
