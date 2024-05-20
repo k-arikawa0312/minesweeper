@@ -25,6 +25,8 @@ const Home = () => {
   const [bombMap, setBombMap] = useState(normalBoard(0, level[1], level[2]));
   const [userInputs, setUserInputs] = useState(normalBoard(0, level[1], level[2]));
   const [isActive, setIsActive] = useState(false);
+  const [tentativeLevel, setTentativeLevel] = useState([1, 1, 1]);
+
   useEffect(() => {
     resetGame();
   }, [level]);
@@ -43,17 +45,18 @@ const Home = () => {
     return () => clearInterval(interval);
   }, [isActive]);
 
-  const setLevel = (inputClick: number) => {
-    if (inputClick === 1) {
-      setNewLevel([10, 9, 9]);
-    } else if (inputClick === 2) {
-      setNewLevel([40, 16, 16]);
-    } else if (inputClick === 3) {
-      setNewLevel([99, 30, 16]);
-    } else if (inputClick) {
-      setNewLevel([]);
+  const setLevel = () => {
+    if (level[0] === 10 && level[1] === 9 && level[2] === 9) {
+      return 1;
+    } else if (level[0] === 30 && level[1] === 16 && level[2] === 16) {
+      return 2;
+    } else if (level[0] === 99 && level[1] === 30 && level[2] === 16) {
+      return 3;
+    } else {
+      return 4;
     }
   };
+
   const makeBoard = (bombMap: number[][], userInputs: number[][]) => {
     const board = normalBoard(-1, level[2], level[1]);
     for (let y = 0; y < level[2]; y++) {
@@ -137,7 +140,7 @@ const Home = () => {
           newUserInputs[y][x] = -100 - userInputs[y][x];
         }
     } else {
-      if (newUserInputs[y] !== undefined) {
+      if (newUserInputs[y] !== undefined && userInputs[y][x] !== -100) {
         const pushCount = newUserInputs.flat().filter((cell) => cell === 1).length;
         if (pushCount === 0) {
           setIsActive(true);
@@ -165,7 +168,7 @@ const Home = () => {
     setUserInputs(newUserInputs);
 
     console.log(bombMap.flat().filter((cell) => cell === 1).length);
-    // console.log('userInputs', userInputs);
+    console.log('userInputs', userInputs);
   };
   const userMap = makeBoard(bombMap, userInputs);
 
@@ -180,21 +183,48 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div>
-        <input type="number" name="width" min={1} max={100} style={{ width: 50, height: 20 }} />
-        <input type="number" name="height" min={1} max={100} style={{ width: 50, height: 20 }} />
-        <input type="number" name="numBomb" min={1} max={100} style={{ width: 50, height: 20 }} />
+        <label>幅</label>
+        <input
+          type="number"
+          id="selectWidth"
+          value={setTentativeLevel[0]}
+          min={1}
+          max={100}
+          onChange={(e) => setTentativeLevel(e.target.value)}
+          style={{ width: 50, height: 20 }}
+        />
+        <label>高さ</label>
+        <input
+          type="number"
+          id="selectHeight"
+          value={setTentativeLevel[1]}
+          min={1}
+          max={100}
+          onChange={(e) => setTentativeLevel(e.target.value)}
+          style={{ width: 50, height: 20 }}
+        />
+        <label>爆弾の数</label>
+        <input
+          type="number"
+          id="selectNumBomb"
+          min={1}
+          max={10000}
+          value={setTentativeLevel[2]}
+          onChange={(e) => (setTentativeLevel[2] = e.target.value)}
+          style={{ width: 50, height: 20 }}
+        />
       </div>
       <div>
-        <button onClick={() => setLevel(1)} style={{ width: 50, height: 30 }}>
+        <button onClick={() => setNewLevel([10, 9, 9])} style={{ width: 50, height: 30 }}>
           初級
         </button>
-        <button onClick={() => setLevel(2)} style={{ width: 50, height: 30 }}>
+        <button onClick={() => setNewLevel([30, 16, 16])} style={{ width: 50, height: 30 }}>
           中級
         </button>
-        <button onClick={() => setLevel(3)} style={{ width: 50, height: 30 }}>
+        <button onClick={() => setNewLevel([99, 30, 16])} style={{ width: 50, height: 30 }}>
           上級
         </button>
-        <button onClick={() => setLevel(4)} style={{ width: 70, height: 30 }}>
+        <button onClick={() => setNewLevel([])} style={{ width: 70, height: 30 }}>
           カスタム
         </button>
       </div>
