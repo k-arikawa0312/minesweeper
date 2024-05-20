@@ -33,6 +33,7 @@ const Home = () => {
 
   useEffect(() => {
     resetGame();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [level]);
   const [seconds, setSeconds] = useState(0);
 
@@ -40,7 +41,7 @@ const Home = () => {
     let interval = 0;
 
     if (isActive) {
-      interval = setInterval(() => {
+      interval = window.setInterval(() => {
         setSeconds((prevSeconds) => prevSeconds + 1);
       }, 1000);
     }
@@ -110,6 +111,7 @@ const Home = () => {
     setSeconds(0);
     setIsActive(false);
   };
+  /* eslint @typescript-eslint/no-explicit-any: 0 */
   const clickHandler = (e: any, x: number, y: number, isRightClick = false) => {
     e.preventDefault();
 
