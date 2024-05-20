@@ -23,6 +23,9 @@
   height: 315px;
   margin-top: 15px;
   background-color: lightgray;
+
+  /* border: 1px solid;
+  border-color: white gray gray white; */
 }
 
 .cell {

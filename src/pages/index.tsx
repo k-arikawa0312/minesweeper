@@ -50,6 +50,8 @@ const Home = () => {
       setNewLevel([40, 16, 16]);
     } else if (inputClick === 3) {
       setNewLevel([99, 30, 16]);
+    } else if (inputClick) {
+      setNewLevel([]);
     }
   };
   const makeBoard = (bombMap: number[][], userInputs: number[][]) => {
@@ -178,10 +180,23 @@ const Home = () => {
   return (
     <div className={styles.container}>
       <div>
-        <button onClick={() => setLevel(1)}>初級</button>
-        <button onClick={() => setLevel(2)}>中級</button>
-        <button onClick={() => setLevel(3)}>上級</button>
-        <button onClick={() => setLevel(4)}>カスタム</button>
+        <input type="number" name="width" min={1} max={100} style={{ width: 50, height: 20 }} />
+        <input type="number" name="height" min={1} max={100} style={{ width: 50, height: 20 }} />
+        <input type="number" name="numBomb" min={1} max={100} style={{ width: 50, height: 20 }} />
+      </div>
+      <div>
+        <button onClick={() => setLevel(1)} style={{ width: 50, height: 30 }}>
+          初級
+        </button>
+        <button onClick={() => setLevel(2)} style={{ width: 50, height: 30 }}>
+          中級
+        </button>
+        <button onClick={() => setLevel(3)} style={{ width: 50, height: 30 }}>
+          上級
+        </button>
+        <button onClick={() => setLevel(4)} style={{ width: 70, height: 30 }}>
+          カスタム
+        </button>
       </div>
       <div className={styles.backboard} style={{ width: level[1] * 41.1, height: level[2] * 47.8 }}>
         <div className={styles.box} style={{ width: level[1] * 35 }}>
@@ -196,11 +211,11 @@ const Home = () => {
                   ? userMap.flat().filter((cell) => cell === -1).length +
                       userMap.flat().filter((cell) => cell === -100).length ===
                     level[0]
-                    ? `-361px -2px`
-                    : `-331px -2px`
-                  : `-391px -2px`,
-              height: 30,
-              width: 30,
+                    ? `-359px 1px`
+                    : `-329px 1px`
+                  : `-389px 1px`,
+              height: 35,
+              width: 35,
             }}
             onClick={resetGame}
           />
