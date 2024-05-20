@@ -38,7 +38,7 @@ const Home = () => {
 
   useEffect(() => {
     let interval = 0;
-    // タイマーを開始する
+
     if (isActive) {
       interval = setInterval(() => {
         setSeconds((prevSeconds) => prevSeconds + 1);
@@ -47,18 +47,6 @@ const Home = () => {
 
     return () => clearInterval(interval);
   }, [isActive]);
-
-  const setLevel = () => {
-    if (level[0] === 10 && level[1] === 9 && level[2] === 9) {
-      return 1;
-    } else if (level[0] === 30 && level[1] === 16 && level[2] === 16) {
-      return 2;
-    } else if (level[0] === 99 && level[1] === 30 && level[2] === 16) {
-      return 3;
-    } else {
-      return 4;
-    }
-  };
 
   const makeBoard = (bombMap: number[][], userInputs: number[][]) => {
     const board = normalBoard(-1, level[2], level[1]);
@@ -172,6 +160,7 @@ const Home = () => {
 
     console.log('userInputs', userInputs);
     console.log('ten', tentativeLevel);
+    console.log(userMap);
   };
   const userMap = makeBoard(bombMap, userInputs);
 
@@ -224,18 +213,33 @@ const Home = () => {
         <button onClick={() => setNewLevel([10, 9, 9])} style={{ width: 50, height: 30 }}>
           初級
         </button>
-        <button onClick={() => setNewLevel([30, 16, 16])} style={{ width: 50, height: 30 }}>
+        <button onClick={() => setNewLevel([40, 16, 16])} style={{ width: 50, height: 30 }}>
           中級
         </button>
         <button onClick={() => setNewLevel([99, 30, 16])} style={{ width: 50, height: 30 }}>
           上級
         </button>
-        <button onClick={() => setNewLevel([])} style={{ width: 70, height: 30 }}>
+        <button
+          onClick={() =>
+            setNewLevel([
+              tentativeLevel.numBomb,
+              tentativeLevel.selectWidth,
+              tentativeLevel.selectHeight,
+            ])
+          }
+          style={{ width: 70, height: 30 }}
+        >
           カスタム
         </button>
       </div>
-      <div className={styles.backboard} style={{ width: level[1] * 41.1, height: level[2] * 47.8 }}>
-        <div className={styles.box} style={{ width: level[1] * 35 }}>
+      <div
+        className={styles.backboard}
+        style={{
+          width: level[1] >= 9 ? level[1] * 41.1 : level[2] * 15 + 370,
+          height: level[2] >= 9 ? level[2] * 47.8 : level[1] * 15 + 430,
+        }}
+      >
+        <div className={styles.box} style={{ width: level[1] >= 9 ? level[1] * 35 : 315 }}>
           <div className={styles.gameInfo}>
             {level[0] - userMap.flat().filter((cell) => cell === -100).length}
           </div>
@@ -257,7 +261,13 @@ const Home = () => {
           />
           <div className={styles.gameInfo}>{seconds}</div>
         </div>
-        <div className={styles.board} style={{ width: level[1] * 35, height: level[2] * 35 }}>
+        <div
+          className={styles.board}
+          style={{
+            width: level[1] * 35,
+            height: level[2] * 35,
+          }}
+        >
           {userMap.map((row, y) =>
             row.map((display, x) => (
               <div
