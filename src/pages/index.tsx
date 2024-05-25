@@ -85,11 +85,6 @@ const Home = () => {
     bombMap: number[][],
     visited: string[],
   ) => {
-    // if (y < 0 || y >= level[2] || x < 0 || x >= level[1]) {
-    //   // 範囲外の座標は無視します
-    //   return;
-    // }
-    console.log(1111);
     if (board[y] === undefined || x < 0 || x >= level[1]) return;
 
     if (visited.includes(`${x}-${y}`)) {
@@ -149,7 +144,6 @@ const Home = () => {
           while (putBomb < level[0]) {
             const t = Math.floor(Math.random() * level[1]);
             const s = Math.floor(Math.random() * level[2]);
-            console.log(99595);
             if (randomBomb.includes(`${t}-${s}`)) continue;
             if (newBombMap[s] !== undefined && newBombMap[s][t] !== 1) {
               newBombMap[s][t] = 1;
@@ -172,9 +166,6 @@ const Home = () => {
       }
     }
     setUserInputs(newUserInputs);
-
-    console.log('ten', tentativeLevel);
-    console.log(userMap);
   };
   const userMap = makeBoard(bombMap, userInputs);
   console.log('userInputs', userInputs);
