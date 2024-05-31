@@ -25,16 +25,6 @@ const findNearBomb = (x: number, y: number, bombMap: number[][]) => {
   }
   return nearBomb;
 };
-const switchRightClickOn = () => {
-  console.log(1);
-  if (rightClickOn === 'off') {
-    rightClickOn = 'on';
-    console.log(2);
-  } else {
-    console.log(3);
-    rightClickOn = 'off';
-  }
-};
 
 const Home = () => {
   const [level, setNewLevel] = useState([10, 9, 9]); //爆弾の数 横 縦
@@ -48,6 +38,14 @@ const Home = () => {
   });
   const [isCustom, setIsCustom] = useState(false);
 
+  const switchRightClickOn = () => {
+    if (rightClickOn === 'off') {
+      rightClickOn = 'on';
+    } else {
+      rightClickOn = 'off';
+    }
+    return rightClickOn;
+  };
   useEffect(() => {
     resetGame();
     // eslint-disable-next-line react-hooks/exhaustive-deps
