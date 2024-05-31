@@ -1,21 +1,20 @@
 import { useEffect, useState } from 'react';
 
+const directions = [
+  [0, 1],
+  [0, -1],
+  [1, 1],
+  [1, -1],
+  [1, 0],
+  [-1, -1],
+  [-1, 0],
+  [-1, 1],
+];
+
+const randomBomb: string[] = [];
+const clickedBomb: number[] = [];
+let rightClickOn: boolean = false;
 const useGame = () => {
-  const directions = [
-    [0, 1],
-    [0, -1],
-    [1, 1],
-    [1, -1],
-    [1, 0],
-    [-1, -1],
-    [-1, 0],
-    [-1, 1],
-  ];
-
-  const randomBomb: string[] = [];
-  const clickedBomb: string[] = [];
-  let rightClickOn: string = 'off';
-
   const normalBoard = (normal = 0, row: number, column: number) =>
     Array.from({ length: row }, () => Array.from({ length: column }, () => normal));
   const findNearBomb = (x: number, y: number, bombMap: number[][]) => {
@@ -37,10 +36,12 @@ const useGame = () => {
   const [isCustom, setIsCustom] = useState(false);
 
   const switchRightClickOn = () => {
-    if (rightClickOn === 'off') {
-      rightClickOn = 'on';
+    if (rightClickOn === false) {
+      console.log(200);
+      rightClickOn = true;
     } else {
-      rightClickOn = 'off';
+      console.log(40);
+      rightClickOn = false;
     }
     return rightClickOn;
   };
@@ -120,10 +121,10 @@ const useGame = () => {
     setIsActive(false);
     clickedBomb.length = 0;
     randomBomb.length = 0;
-    rightClickOn = 'off';
+    rightClickOn = false;
   };
   /* eslint @typescript-eslint/no-explicit-any: 0 */
-  const clickHandler = (e: any, x: number, y: number, isRightClick: string) => {
+  const clickHandler = (e: any, x: number, y: number, isRightClick: boolean) => {
     e.preventDefault();
 
     if (y < 0 || y >= level[2] || x < 0 || x >= level[1]) {
@@ -132,17 +133,17 @@ const useGame = () => {
 
     const newBombMap = structuredClone(bombMap);
     const newUserInputs = structuredClone(userInputs);
-    if (isRightClick === 'off') {
-      if (rightClickOn === 'on') {
+    if (isRightClick === false) {
+      if (rightClickOn === true) {
         // eslint-disable-next-line no-param-reassign
-        isRightClick = 'on';
+        isRightClick = true;
       } else {
         // eslint-disable-next-line no-param-reassign
-        isRightClick = 'off';
+        isRightClick = false;
       }
     }
 
-    if (isRightClick === 'on') {
+    if (isRightClick === true) {
       if (userInputs[y] !== undefined && (userInputs[y][x] === 1 && bombMap[y][x] === 1) === false)
         if (
           userMap.flat().filter((cell) => cell === -1).length +
@@ -179,13 +180,14 @@ const useGame = () => {
           newUserInputs[y][x] = 1;
         }
         if (newUserInputs[y][x] === 1 && bombMap[y][x] === 1) {
-          clickedBomb.push(`${x}-${y}`);
+          clickedBomb.push(x, y);
         }
       }
     }
     setUserInputs(newUserInputs);
   };
   const userMap = makeBoard(bombMap, userInputs);
+  console.log(rightClickOn);
 
   const clickedClass = (inputClick: number) => {
     setIsCustom(false);
@@ -227,6 +229,8 @@ const useGame = () => {
     setIsCustom,
     level,
     resetGame,
+    clickedBomb,
+    rightClickOn,
   };
 };
 export default useGame;

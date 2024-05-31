@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from '../pages/index.module.css';
 
 interface Props {
   isCustom: boolean;
@@ -26,7 +25,6 @@ const TopArea: React.FC<Props> = ({
 }) => {
   return (
     <>
-      <div className={styles.container} />
       <div style={{ visibility: isCustom ? 'visible' : 'hidden' }}>
         <label>幅</label>
         <input

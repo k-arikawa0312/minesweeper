@@ -17,6 +17,8 @@ const Home = () => {
     setIsCustom,
     level,
     resetGame,
+    clickedBomb,
+    rightClickOn,
   } = useGame();
 
   return (
@@ -35,8 +37,8 @@ const Home = () => {
         seconds={seconds}
         resetGame={resetGame}
         switchRightClickOn={switchRightClickOn}
-        rightClickOn="rightClickOn"
-        clickedBomb=""
+        rightClickOn={rightClickOn}
+        clickedBomb={clickedBomb}
         userMap={userMap}
       />
     </div>

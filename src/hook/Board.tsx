@@ -1,19 +1,18 @@
-import styles from './index.module.css';
+import styles from '../pages/index.module.css';
 
 interface Props {
   level: number[];
   seconds: number;
   clickHandler: (
-    e: React.MouseEvent<HTMLDivElement>,
+    e: React.MouseEvent<HTMLButtonElement>,
     x: number,
     y: number,
-    isRightClick: string,
+    isRightClick: boolean,
   ) => void;
   resetGame: () => void;
-
-  switchRightClickOn: () => string;
-  rightClickOn: string;
-  clickedBomb: string;
+  switchRightClickOn: () => boolean;
+  rightClickOn: boolean;
+  clickedBomb: number[];
   userMap: number[][];
 }
 
@@ -67,11 +66,11 @@ const Board: React.FC<Props> = ({
         >
           {userMap.map((row, y) =>
             row.map((display, x) => (
-              <div
+              <button
                 className={styles.cell}
                 key={`${x}-${y}`}
-                onClick={(e) => clickHandler(e, x, y, 'off')}
-                onContextMenu={(e) => clickHandler(e, x, y, 'on')}
+                onClick={(e) => clickHandler(e, x, y, false)}
+                onContextMenu={(e) => clickHandler(e, x, y, true)}
               >
                 {display < 0 && (
                   <div className={styles.stone}>
@@ -95,17 +94,17 @@ const Board: React.FC<Props> = ({
                     style={{
                       backgroundPosition: `-300px 0px`,
                       backgroundColor:
-                        clickedBomb.includes(`${x}-${y}`) === true ? '#ff1111' : '#d3d3d3',
+                        clickedBomb[0] === x && clickedBomb[1] === y ? '#ff1111' : '#d3d3d3',
                     }}
                   />
                 )}
-              </div>
+              </button>
             )),
           )}
         </div>
       </div>
       <button onClick={switchRightClickOn} style={{ height: 30, width: 50 }}>
-        旗{rightClickOn}
+        旗{rightClickOn === true ? 'on' : 'off'}
       </button>
     </>
   );
