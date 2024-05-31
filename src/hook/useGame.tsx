@@ -217,8 +217,15 @@ const useGame = () => {
   return {
     switchRightClickOn,
     clickHandler,
+    userMap,
+    setTentativeLevel,
+    isCustom,
+    seconds,
     clickedClass,
     reflectCustom,
+    tentativeLevel,
+    setIsCustom,
+    level,
     resetGame,
   };
 };
