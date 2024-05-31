@@ -14,6 +14,7 @@ const directions = [
 
 const randomBomb: string[] = [];
 const clickedBomb: string[] = [];
+let rightClickOn: string = 'off';
 
 const normalBoard = (normal = 0, row: number, column: number) =>
   Array.from({ length: row }, () => Array.from({ length: column }, () => normal));
@@ -24,6 +25,17 @@ const findNearBomb = (x: number, y: number, bombMap: number[][]) => {
   }
   return nearBomb;
 };
+const switchRightClickOn = () => {
+  console.log(1);
+  if (rightClickOn === 'off') {
+    rightClickOn = 'on';
+    console.log(2);
+  } else {
+    console.log(3);
+    rightClickOn = 'off';
+  }
+};
+
 const Home = () => {
   const [level, setNewLevel] = useState([10, 9, 9]); //爆弾の数 横 縦
   const [bombMap, setBombMap] = useState(normalBoard(0, level[1], level[2]));
@@ -112,9 +124,10 @@ const Home = () => {
     setIsActive(false);
     clickedBomb.length = 0;
     randomBomb.length = 0;
+    rightClickOn = 'off';
   };
   /* eslint @typescript-eslint/no-explicit-any: 0 */
-  const clickHandler = (e: any, x: number, y: number, isRightClick = false) => {
+  const clickHandler = (e: any, x: number, y: number, isRightClick: string) => {
     e.preventDefault();
 
     if (y < 0 || y >= level[2] || x < 0 || x >= level[1]) {
@@ -123,8 +136,17 @@ const Home = () => {
 
     const newBombMap = structuredClone(bombMap);
     const newUserInputs = structuredClone(userInputs);
+    if (isRightClick === 'off') {
+      if (rightClickOn === 'on') {
+        // eslint-disable-next-line no-param-reassign
+        isRightClick = 'on';
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        isRightClick = 'off';
+      }
+    }
 
-    if (isRightClick) {
+    if (isRightClick === 'on') {
       if (userInputs[y] !== undefined && (userInputs[y][x] === 1 && bombMap[y][x] === 1) === false)
         if (
           userMap.flat().filter((cell) => cell === -1).length +
@@ -168,8 +190,6 @@ const Home = () => {
     setUserInputs(newUserInputs);
   };
   const userMap = makeBoard(bombMap, userInputs);
-  console.log('userInputs', userInputs);
-  console.log(clickedBomb);
 
   const clickedClass = (inputClick: number) => {
     setIsCustom(false);
@@ -293,8 +313,8 @@ const Home = () => {
               <div
                 className={styles.cell}
                 key={`${x}-${y}`}
-                onClick={(e) => clickHandler(e, x, y, false)}
-                onContextMenu={(e) => clickHandler(e, x, y, true)}
+                onClick={(e) => clickHandler(e, x, y, 'off')}
+                onContextMenu={(e) => clickHandler(e, x, y, 'on')}
               >
                 {display < 0 && (
                   <div className={styles.stone}>
@@ -327,6 +347,9 @@ const Home = () => {
           )}
         </div>
       </div>
+      <button onClick={switchRightClickOn} style={{ height: 30, width: 50 }}>
+        旗{rightClickOn}
+      </button>
     </div>
   );
 };
